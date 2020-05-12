@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { Form, Input, InputNumber, Button, Card } from 'antd'
 
-const CustomForm = ({ titleCard, formName, onFinish, onFinishFailed, items, loading, ...props}) => {
+const CustomForm = ({ formName, onFinish, onFinishFailed, items, loading, ...props}) => {
 
   const renderElementForm = (type, item) => {
 

@@ -1,43 +1,44 @@
-import React, { useState } from 'react'
-import { Button, Form, Card } from 'antd'
-import API from '../../util/api'
-import form from './form'
+import React, { useState } from "react";
+import { withRouter, Link } from "react-router-dom";
+import { Card } from "antd";
+import form from "./form";
+import { authServices } from "../../services/";
+import CustomForm from "../../components/CustomForm/";
 
-import CustomForm from '../../components/CustomForm/';
+import "./styles.css";
 
-import "./styles.css"
-
-console.log(form)
-
-const api = new API();
-
-const Login = () => {
-
-  const [loading, setLoading] = useState(false)
+const Login = (props) => {
+  const [loading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
-    
     try {
-      console.log(values)
-      setLoading(true)
-      const response = await api.post("auth/login", values)
-      console.log(response)
-      setLoading(false)
+      if (values.email !== null && values.password !== null) {
+        setLoading(true);
+        const response = await authServices.login(values);
+        setLoading(false);
+        LoginSuccess(response.data);
+      }
     } catch (error) {
-      console.log(error)
-      setLoading(false)
+      console.log(error);
+      setLoading(false);
     }
+  };
 
-  }
+  const LoginSuccess = (user) => {
+    localStorage.setItem("user", JSON.stringify(user));
+    setTimeout(() => {
+      props.history.push("home");
+    }, 2500);
+  };
 
   const onFinishFailed = (error) => {
-    console.error(error)
-  }
+    console.error(error);
+  };
 
   return (
     <div className="container-login">
       <Card title="Login" bordered={false} className="login-card">
-        <CustomForm 
+        <CustomForm
           titleCard="Login"
           formName="form-login"
           onFinish={onFinish}
@@ -45,13 +46,21 @@ const Login = () => {
           items={form}
           loading={loading}
         >
-          <div style={{ display: 'flex', alignItems: "center", justifyContent: "center", marginTop: "5px"}}>
-            <a href="" style={{ color: "#000" }}> or register now!</a>
-          </div>
+          <Link
+            to="/register"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: "5px",
+            }}
+          >
+            <span style={{ color: "#000" }}> ¿No tienes cuenta? Registrate</span>
+          </Link>
         </CustomForm>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default withRouter(Login);
