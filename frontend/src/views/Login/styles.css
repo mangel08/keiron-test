@@ -6,13 +6,6 @@
   align-items: center;
 }
 
-.login-card {
-  -webkit-box-shadow: 10px 31px 34px -1px rgba(0,0,0,0.31);
-  -moz-box-shadow: 10px 31px 34px -1px rgba(0,0,0,0.31);
-  box-shadow: 10px 31px 34px -1px rgba(0,0,0,0.31);
-  width: 350px;
-}
-
 .btn-primary {
   background: #ff1744 !important;
   border-color: #ff1744 !important;

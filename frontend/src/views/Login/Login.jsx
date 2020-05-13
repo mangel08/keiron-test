@@ -37,7 +37,7 @@ const Login = (props) => {
 
   return (
     <div className="container-login">
-      <Card title="Login" bordered={false} className="login-card">
+      <Card title="Login" bordered={false} width="350" className="custom-card">
         <CustomForm
           titleCard="Login"
           formName="form-login"

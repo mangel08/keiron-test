@@ -7,18 +7,22 @@ import Register from "./views/Register";
 import Home from "./views/Home";
 import LayoutContainer from "./components/Layout";
 
-const AppRouter = () => {
+const AppRouter = ({ history }) => {
   const verifyRoute = (Component) => {
-    return authServices.isLoggedIn() ? <Component /> : <Redirect to="/" />;
+    return authServices.isLoggedIn() ? <Component /> : <Redirect to="/login" />;
+  };
+
+  const verifyHome = (Component) => {
+    return authServices.isLoggedIn() ? <Redirect to="/home" /> : <Component />;
   };
 
   return (
-    <Router>
+    <Router history={history}>
       <LayoutContainer>
         <Switch>
-          <Redirect to="/login" exact path="/" />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
+          <Redirect to="/login" exact path="/" render={() => verifyHome(Login)} />
+          <Route exact path="/login" component={Login} render={() => verifyHome(Login)} />
+          <Route exact path="/register" component={Register} render={() => verifyHome(Login)} />
           <Route exact path="/home" render={() => verifyRoute(Home)} />
         </Switch>
       </LayoutContainer>
