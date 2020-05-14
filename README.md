@@ -65,7 +65,7 @@ REACT_APP_API_URL = YOUR_API_NODE_URL;
 ### For example:
 
 ```js
-REACT_APP_API_URL=http://localhost:8105/api/v1
+REACT_APP_API_URL=http://localhost:5000/api/v1
 ```
 
 ---
