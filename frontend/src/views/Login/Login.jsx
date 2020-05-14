@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { withRouter, Link } from "react-router-dom";
-import { Card } from "antd";
+import { Card, message } from "antd";
 import form from "./form";
 import { authServices } from "../../services/";
 import CustomForm from "../../components/CustomForm/";
@@ -11,11 +11,10 @@ const Login = (props) => {
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
+    setLoading(true);
     try {
       if (values.email !== null && values.password !== null) {
-        setLoading(true);
         const response = await authServices.login(values);
-        setLoading(false);
         LoginSuccess(response.data);
       }
     } catch (error) {
@@ -28,6 +27,7 @@ const Login = (props) => {
     localStorage.setItem("user", JSON.stringify(user));
     setTimeout(() => {
       props.history.push("home");
+      setLoading(false);
     }, 2500);
   };
 

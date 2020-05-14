@@ -1,26 +1,19 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import { withRouter } from "react-router-dom";
-import { Table, Tag, Space, Button, Modal, Form, Select } from "antd";
+import { Table, Tag, Space, Button, message, Popconfirm } from "antd";
 import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { userServices } from "../../../services";
+import { ticketServices } from "../../../services";
 
+import FormTicket from "./FormTicket";
+import ViewTicket from "./ViewTicket";
 import "./style.css";
 
 const TicketTable = ({ getTickets, setTickets, tickets, ...props }) => {
   const user = JSON.parse(localStorage.getItem("user"));
-  const [loading, setLoading] = useState([]);
-  const [visible, setVisible] = useState(false);
-  const [users, setUsers] = useState([]);
-
-  const [form] = Form.useForm();
-  const { Option } = Select;
-
-  useEffect(() => {
-    getUsers();
-    return () => {
-      setUsers([]);
-    };
-  }, []);
+  const [visibleFormTicket, setVisibleFormTicket] = useState(false);
+  const [visibleViewTicket, setVisibleViewTicket] = useState(false);
+  const [ticketSelected, setTicketSelected] = useState(null);
+  const [action, setAction] = useState(null);
 
   const columns = [
     {
@@ -32,9 +25,11 @@ const TicketTable = ({ getTickets, setTickets, tickets, ...props }) => {
       title: "Estatus Ticket",
       key: "requested_ticket",
       dataIndex: "requested_ticket",
-      render: (item) => (
+      render: (item, record) => (
         <Fragment>
-          <Tag color={item ? "green" : "volcano"}>{item ? "Ticket Solicitado" : "Ticket sin solicitar"}</Tag>
+          <Tag key={record.id} color={item ? "green" : "volcano"}>
+            {item ? "Ticket Solicitado" : "Ticket sin solicitar"}
+          </Tag>
         </Fragment>
       ),
     },
@@ -47,31 +42,57 @@ const TicketTable = ({ getTickets, setTickets, tickets, ...props }) => {
     {
       title: "Action",
       key: "action",
-      render: () => (
+      dataIndex: "id",
+      render: (id, record) => (
         <Space size="middle">
-          <a>Ver Ticket </a>
-          <a>Editar Ticket</a>
-          <a>Eliminar Ticket </a>
+          <EyeOutlined onClick={() => viewTicket(record)} title="Ver" style={{ color: "green", cursor: "pointer" }} />
+          <EditOutlined
+            onClick={() => handleTicketForm("edit", record)}
+            title="Editar"
+            style={{ color: "orange", cursor: "pointer" }}
+          />
+          <Popconfirm
+            placement="topLeft"
+            title={"¿Estás seguro que deseas eliminar este ticket?"}
+            onConfirm={() => deleteTicket(id)}
+            okText="OK"
+            cancelText="Cancelar"
+          >
+            <DeleteOutlined title="Eliminar" style={{ color: "red", cursor: "pointer" }} />
+          </Popconfirm>
         </Space>
       ),
     },
   ];
 
-  const handleOk = () => {
-    setVisible(false);
+  const viewTicket = async (ticket) => {
+    console.log(ticket);
+    setTicketSelected(ticket);
+    setVisibleViewTicket(true);
   };
 
-  const handleCancel = () => {
-    setVisible(false);
+  const handleCancelViewTicket = () => {
+    setTicketSelected(null);
+    setVisibleViewTicket(false);
   };
 
-  const getUsers = async () => {
+  const handleTicketForm = (action, ticket) => {
+    console.log(action);
+    console.log(ticket);
+    if (ticket) setTicketSelected(ticket);
+    setAction(action);
+    setVisibleFormTicket(true);
+  };
+
+  const deleteTicket = async (ticketId) => {
     try {
-      const response = await userServices.getUsersWithType();
-      console.log(response);
-      setUsers(response.users);
+      console.log(ticketId);
+      await ticketServices.deleteTicket(ticketId);
+      message.success("Ticket eliminado exitosamente");
+      await getTickets();
     } catch (error) {
-      console.log(error);
+      message.error("Ha ocurrido un error, intente nuevamente");
+      console.error(error);
     }
   };
 
@@ -80,47 +101,23 @@ const TicketTable = ({ getTickets, setTickets, tickets, ...props }) => {
       <Button
         type="primary"
         shape="round"
-        onClick={() => setVisible(true)}
+        onClick={() => handleTicketForm("create", null)}
         icon={<PlusOutlined style={{ color: "#FFF" }} />}
       >
         Agregar Ticket
       </Button>
-      <Table columns={columns} dataSource={tickets} />
+      <Table rowKey="id" columns={columns} dataSource={tickets} />
 
-      <Modal title="Agregar Ticket" visible={visible} onOk={handleOk} onCancel={handleCancel}>
-        <Form
-          form={form}
-          layout="vertical"
-          name="form_in_modal"
-          initialValues={{
-            modifier: "public",
-          }}
-        >
-          <Form.Item
-            name="userId"
-            label="Usuario"
-            rules={[
-              {
-                required: true,
-                message: "Por favor elija un usuario",
-              },
-            ]}
-          >
-            <Select
-              showSearch
-              placeholder="Selecciona un usuario"
-              optionFilterProp="children"
-              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-            >
-              {users.map((user) => (
-                <Option key={user.id} value={user.id}>
-                  {user.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <FormTicket
+        visible={visibleFormTicket}
+        setVisible={setVisibleFormTicket}
+        getTickets={getTickets}
+        ticket={ticketSelected}
+        action={action}
+        setTicketSelected={setTicketSelected}
+        setAction={setAction}
+      />
+      <ViewTicket ticket={ticketSelected} visible={visibleViewTicket} handleCancel={handleCancelViewTicket} />
     </div>
   );
 };

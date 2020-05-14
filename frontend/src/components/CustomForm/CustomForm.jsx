@@ -3,7 +3,6 @@ import { Form, Input, InputNumber, Button, Select } from "antd";
 
 const CustomForm = ({ formName, onFinish, onFinishFailed, items, loading, ...props }) => {
   const renderElementForm = (type, item) => {
-    console.log(item.data);
     const obj = {
       text: <Input {...item} />,
       email: <Input {...item} />,

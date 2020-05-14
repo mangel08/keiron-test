@@ -25,11 +25,13 @@ const getTicket = async (req, res) => {
   debug("getTicket");
   try {
     const { id } = req.params;
-    if (!id) {
-      return Error("Bad Request", res, 400);
-    }
+
+    if (!id) return Error("Bad Request", res, 400);
+
     const ticket = await dbTicket.findById(id);
+
     if (!ticket) return Error({ message: "ticket not found", status: 404 }, res);
+
     Success(res, { data: ticket, model: "ticket" });
   } catch (error) {
     Error(error, res);
@@ -41,9 +43,7 @@ const saveTicket = async (req, res) => {
   try {
     const objectTicket = req.body;
 
-    if (objectIsEmpty(objectTicket) || !objectTicket.userId) {
-      return Error("Bad Request", res, 400);
-    }
+    if (objectIsEmpty(objectTicket) || !objectTicket.userId) return Error("Bad Request", res, 400);
 
     const ticket = await dbTicket.create(objectTicket);
     Success(res, { data: ticket, model: "ticket" }, 201);
@@ -56,12 +56,15 @@ const updateTicket = async (req, res) => {
   debug("updateTicket");
   try {
     const { id } = req.params;
+
     const objectTicket = req.body;
-    if (objectIsEmpty(objectTicket) || !id) {
-      return Error("Bad Request", res, 400);
-    }
+
+    if (objectIsEmpty(objectTicket) || !id) return Error("Bad Request", res, 400);
+
     const ticket = await dbTicket.update(id, objectTicket);
+
     if (!ticket) return Error({ message: "ticket not found", status: 404 }, res);
+
     Success(res, { data: ticket, model: "ticket" });
   } catch (error) {
     Error(error, res);
@@ -72,9 +75,9 @@ const deleteTicket = async (req, res) => {
   debug("deleteTicket");
   try {
     const { id } = req.params;
-    if (!id) {
-      return Error("Bad Request", res, 400);
-    }
+
+    if (!id) return Error("Bad Request", res, 400);
+
     await dbTicket.delete(id);
     Success(res);
   } catch (error) {
@@ -86,12 +89,14 @@ const getTicketsByUser = async (req, res) => {
   debug("getTicketUser");
   try {
     const { id } = req.params;
-    if (!id) {
-      return Error("Bad Request", res, 400);
-    }
+
+    if (!id) return Error("Bad Request", res, 400);
+
     const ticketsByUser = await dbTicket.findTicketsByUser(id);
+
     if (!ticketsByUser) return Error({ message: "Tickets not found", status: 404 }, res);
-    Success(res, { data: ticketsByUser, model: "ticketsByUser" });
+
+    Success(res, { data: ticketsByUser, model: "tickets" });
   } catch (error) {
     Error(error, res);
   }

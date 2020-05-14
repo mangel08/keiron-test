@@ -16,10 +16,10 @@ export default {
     });
   },
 
-  getTicketsByUser: async (user) => {
+  getTicketsByUser: async (id) => {
     return new Promise((resolve, reject) => {
       api
-        .get(`tickets/user/${user.id}`)
+        .get(`tickets/user/${id}`)
         .then((res) => {
           resolve(res.data);
         })
@@ -57,10 +57,10 @@ export default {
     });
   },
 
-  deleteTicket(ticket) {
+  deleteTicket(id) {
     return new Promise((resolve, reject) => {
       api
-        .delete(`ticket/${ticket.id}`)
+        .delete(`ticket/${id}`)
         .then((res) => {
           resolve(res.data);
         })

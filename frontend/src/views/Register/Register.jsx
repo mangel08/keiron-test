@@ -9,11 +9,10 @@ const Register = (props) => {
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
+    setLoading(true);
     try {
       if (values.email !== null && values.name !== null && values.password !== null) {
-        setLoading(true);
         const response = await authServices.register(values);
-        setLoading(false);
         RegisterSuccess(response.data);
       }
     } catch (error) {
@@ -24,6 +23,7 @@ const Register = (props) => {
   const RegisterSuccess = (user) => {
     localStorage.setItem("user", JSON.stringify(user));
     setTimeout(() => {
+      setLoading(false);
       props.history.push("home");
     }, 2500);
   };
@@ -36,7 +36,7 @@ const Register = (props) => {
     <div className="container-login">
       <Card title="Register" bordered={false} width="350" className="custom-card">
         <CustomForm
-          formName="form-login"
+          formName="form-register"
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           items={form}

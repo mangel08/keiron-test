@@ -10,14 +10,19 @@ const Home = () => {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // Function to get the Tickets of the user is logged
   const getTicketsByUsername = async () => {
     try {
+      console.log(user);
       const response = await ticketServices.getTicketsByUser(user.id);
+      console.log(response);
+      setTickets(response.tickets);
     } catch (error) {
       console.error(error);
     }
   };
 
+  // Function to get the all Tickets by Table Admin
   const getTickets = async () => {
     try {
       const response = await ticketServices.getTickets();
@@ -43,7 +48,7 @@ const Home = () => {
 
   const renderByTypeUser = () => {
     if (!authServices.isAdmin()) {
-      return <TicketCard tickets={tickets} />;
+      return <TicketCard tickets={tickets} getTicketsByUsername={getTicketsByUsername} />;
     } else {
       return <TicketTable getTickets={getTickets} tickets={tickets} setTickets={setTickets} />;
     }
