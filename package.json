@@ -11,8 +11,8 @@
   "devDependencies": {},
   "scripts": {
     "start": "npm run frontend && npm run backend",
-    "frontend": "cd frontend/ && npm start &",
-    "backend": "cd backend/ && npm run dev &"
+    "frontend": "cd frontend/ && npm start",
+    "backend": "cd backend/ && npm run dev"
   },
   "repository": {
     "type": "git",
