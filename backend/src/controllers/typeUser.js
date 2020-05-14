@@ -17,7 +17,7 @@ const getTypeUsers = async (req, res) => {
 
     if (!typeUsers) return Error({ message: "TypeUser not found", status: 404 }, res);
 
-    Success(res, { data: typeUsers, model: "typeUsers" });
+    Success(res, { data: typeUsers, model: "data" });
   } catch (error) {
     Error(error, res);
   }
@@ -34,7 +34,7 @@ const getTypeUser = async (req, res) => {
 
     if (!typeUser) return Error({ message: "TypeUser not found", status: 404 }, res);
 
-    Success(res, { data: typeUser, model: "typeUser" });
+    Success(res, { data: typeUser, model: "data" });
   } catch (error) {
     Error(error, res);
   }
@@ -49,7 +49,7 @@ const saveTypeUser = async (req, res) => {
 
     const typeUser = await dbTypeUser.create(objectTypeUser);
 
-    Success(res, { data: typeUser, model: "typeUser" }, 201);
+    Success(res, { data: typeUser, model: "data" }, 201);
   } catch (error) {
     Error(error, res);
   }
@@ -67,7 +67,7 @@ const updateTypeUser = async (req, res) => {
 
     if (!typeUser) return Error({ message: "TypeUser not found", status: 404 }, res);
 
-    Success(res, { data: typeUser, model: "typeUser" });
+    Success(res, { data: typeUser, model: "data" });
   } catch (error) {
     Error(error, res);
   }

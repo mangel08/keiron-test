@@ -11,7 +11,7 @@ export default {
           resolve(res.data);
         })
         .catch((error) => {
-          reject(error.response.data);
+          reject(error.response);
         });
     });
   },
@@ -25,7 +25,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          reject(error.response.data);
+          reject(error.response);
         });
     });
   },

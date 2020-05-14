@@ -1,14 +1,17 @@
 import React, { Fragment, useState } from "react";
 import { Card, Col, Row, Tag, message } from "antd";
-import { ticketServices } from "../../../services/";
+import { useDispatch } from "react-redux";
+import { updateTicketAction } from "../../../actions/ticketActions";
 
 import "./style.css";
-const TicketCard = ({ tickets, getTicketsByUsername, ...props }) => {
+const TicketCard = ({ tickets, getTicketsByUser, ...props }) => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const dispatch = useDispatch();
+  const updateTicket = (ticket) => dispatch(updateTicketAction(ticket));
+
   const changeTicketStatus = async (ticket) => {
     try {
-      const response = await ticketServices.updateTicket({ ...ticket, requested_ticket: !ticket.requested_ticket });
-      console.log(response);
-      getTicketsByUsername();
+      await updateTicket({ ...ticket, requested_ticket: !ticket.requested_ticket });
     } catch (error) {
       message.error("Ha ocurrido un error intente nuevamente");
       console.error(error);

@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Select, message } from "antd";
-import { userServices, ticketServices } from "../../../services";
+import { useDispatch } from "react-redux";
+import { saveTicketAction, updateTicketAction } from "../../../actions/ticketActions";
+import { userServices } from "../../../services";
 
 const FormTicket = ({ visible, setVisible, getTickets, ticket, action, setTicketSelected, setAction }) => {
   const [users, setUsers] = useState([]);
+  const dispatch = useDispatch();
+  const saveTicket = (ticket) => dispatch(saveTicketAction(ticket));
+  const updateTicket = (ticket) => dispatch(updateTicketAction(ticket));
   const [form] = Form.useForm();
   const { Option } = Select;
 
@@ -23,7 +28,7 @@ const FormTicket = ({ visible, setVisible, getTickets, ticket, action, setTicket
   const getUsers = async () => {
     try {
       const response = await userServices.getUsersWithType();
-      setUsers(response.users);
+      setUsers(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -38,9 +43,9 @@ const FormTicket = ({ visible, setVisible, getTickets, ticket, action, setTicket
             ...ticket,
             userId: values.userId,
           };
-          await ticketServices.updateTicket(objTicket);
+          await updateTicket(objTicket);
         } else {
-          await ticketServices.saveTicket(values);
+          await saveTicket(values);
         }
         form.resetFields();
         setVisible(false);

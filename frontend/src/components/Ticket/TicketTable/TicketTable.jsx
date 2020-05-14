@@ -2,14 +2,18 @@ import React, { useState, Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import { Table, Tag, Space, Button, message, Popconfirm } from "antd";
 import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-import { ticketServices } from "../../../services";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTicketsAction, deleteTicketAction } from "../../../actions/ticketActions";
 
 import FormTicket from "./FormTicket";
 import ViewTicket from "./ViewTicket";
 import "./style.css";
 
-const TicketTable = ({ getTickets, setTickets, tickets, ...props }) => {
-  const user = JSON.parse(localStorage.getItem("user"));
+const TicketTable = ({ ...props }) => {
+  const dispatch = useDispatch();
+  const tickets = useSelector((state) => state.tickets);
+  const getTickets = () => dispatch(fetchTicketsAction());
+  const deleteTicket = (ticketId) => dispatch(deleteTicketAction(ticketId));
   const [visibleFormTicket, setVisibleFormTicket] = useState(false);
   const [visibleViewTicket, setVisibleViewTicket] = useState(false);
   const [ticketSelected, setTicketSelected] = useState(null);
@@ -54,7 +58,7 @@ const TicketTable = ({ getTickets, setTickets, tickets, ...props }) => {
           <Popconfirm
             placement="topLeft"
             title={"¿Estás seguro que deseas eliminar este ticket?"}
-            onConfirm={() => deleteTicket(id)}
+            onConfirm={() => handleDeleteTicket(id)}
             okText="OK"
             cancelText="Cancelar"
           >
@@ -84,12 +88,11 @@ const TicketTable = ({ getTickets, setTickets, tickets, ...props }) => {
     setVisibleFormTicket(true);
   };
 
-  const deleteTicket = async (ticketId) => {
+  const handleDeleteTicket = async (ticketId) => {
     try {
-      console.log(ticketId);
-      await ticketServices.deleteTicket(ticketId);
+      await deleteTicket(ticketId);
       message.success("Ticket eliminado exitosamente");
-      await getTickets();
+      // await getTickets();
     } catch (error) {
       message.error("Ha ocurrido un error, intente nuevamente");
       console.error(error);

@@ -18,7 +18,9 @@ const Login = (props) => {
         LoginSuccess(response.data);
       }
     } catch (error) {
-      console.log(error);
+      if (error.status === 401) {
+        message.error("Usuario o password incorrecto");
+      }
       setLoading(false);
     }
   };

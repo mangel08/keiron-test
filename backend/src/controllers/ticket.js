@@ -15,7 +15,7 @@ const getTickets = async (req, res) => {
   try {
     const tickets = await dbTicket.findAll();
     if (!tickets) return Error({ message: "Ticket not found", status: 404 }, res);
-    Success(res, { data: tickets, model: "tickets" });
+    Success(res, { data: tickets, model: "data" });
   } catch (error) {
     Error(error, res);
   }
@@ -32,7 +32,7 @@ const getTicket = async (req, res) => {
 
     if (!ticket) return Error({ message: "ticket not found", status: 404 }, res);
 
-    Success(res, { data: ticket, model: "ticket" });
+    Success(res, { data: ticket, model: "data" });
   } catch (error) {
     Error(error, res);
   }
@@ -46,7 +46,7 @@ const saveTicket = async (req, res) => {
     if (objectIsEmpty(objectTicket) || !objectTicket.userId) return Error("Bad Request", res, 400);
 
     const ticket = await dbTicket.create(objectTicket);
-    Success(res, { data: ticket, model: "ticket" }, 201);
+    Success(res, { data: ticket, model: "data" }, 201);
   } catch (error) {
     Error(error, res);
   }
@@ -65,7 +65,7 @@ const updateTicket = async (req, res) => {
 
     if (!ticket) return Error({ message: "ticket not found", status: 404 }, res);
 
-    Success(res, { data: ticket, model: "ticket" });
+    Success(res, { data: ticket, model: "data" });
   } catch (error) {
     Error(error, res);
   }
@@ -96,7 +96,7 @@ const getTicketsByUser = async (req, res) => {
 
     if (!ticketsByUser) return Error({ message: "Tickets not found", status: 404 }, res);
 
-    Success(res, { data: ticketsByUser, model: "tickets" });
+    Success(res, { data: ticketsByUser, model: "data" });
   } catch (error) {
     Error(error, res);
   }
