@@ -1,0 +1,32 @@
+{
+  "name": "keiron-test",
+  "version": "1.0.0",
+  "description": "Keiron Test Fullstack REACT + NODE",
+  "main": "index.js",
+  "dependencies": {
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "npm run frontend && npm run backend",
+    "frontend": "cd frontend/ && npm start &",
+    "backend": "cd backend/ && npm run dev &"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mangel08/keiron-test.git"
+  },
+  "keywords": [
+    "REACT",
+    "NODE",
+    "JS"
+  ],
+  "author": "Miguelangel Palma <mangel.2711@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mangel08/keiron-test/issues"
+  },
+  "homepage": "https://github.com/mangel08/keiron-test#readme"
+}
